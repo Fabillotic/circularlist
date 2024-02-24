@@ -63,13 +63,81 @@
  *
  * Example:
  * struct node *list, *node;
- * list_foreach_backwards(&list, node) {
+ * list_foreach_reverse(&list, node) {
  * 	printf("%d\n", node->some_value);
  * }
  */
-#define list_foreach_backwards(LIST, NODE) for((NODE) = (*(LIST))->prev;\
+#define list_foreach_reverse(LIST, NODE) for((NODE) = (*(LIST))->prev;\
 		(NODE);\
 		(NODE) = ((NODE)->prev == (*(LIST))->prev ? (void*) 0 : \
 			(NODE)->prev))
+
+/* Iterate through each entry in the list safely
+ *
+ * Like list_foreach but entries can be removed safely.
+ *
+ * NODE is the iterator letting you access the current node.
+ * NODE will be reset to NULL at the end.
+ * TMP is another temporary value of the same type as NODE.
+ *
+ * Note that when removing entries, the LIST pointer may be changed while
+ * iterating through the list. This is usually not an issue.
+ *
+ * Example:
+ * struct node *list, *node, *tmp;
+ * list_foreach_safe(&list, node, tmp) {
+ * 	printf("%d\n", node->some_value);
+ * }
+ *
+ * TECHNICAL STUFF:
+ * This macro uses a bit of trickery with the boolean eval part of the for loop.
+ * C still evaluates both sides of a boolean OR, even when one of them is
+ * already true. Additionally a for loop is essentially a while loop:
+ *
+ * for(i = 0; i < 10; i++) {--CODE--} is pretty much equivalent to:
+ * i = 0; while(i < 10) {--CODE--; i++}
+ * This in turn is equivalent to:
+ * --------------------------
+ * i = 0;
+ * top:
+ * if(!(i < 10)) goto done; // we can execute code here
+ * --CODE--
+ * i++; // we can execute here
+ * goto top;
+ * done:
+ * --------------------------
+ * As such using the boolean eval and update expressions we can effectively
+ * execute at the top and bottom of the loop only using a for expression.
+ * Using this, it is possible to update TMP at the top of the loop and to set
+ * NODE to TMP at the bottom of the loop, which is necessary for a safe version
+ * of foreach.
+ */
+#define list_foreach_safe(LIST, NODE, TMP) for((NODE) = *(LIST);\
+		(NODE) && (\
+		((TMP) = (NODE)->next == *(LIST) ? (void*) 0 : (NODE)->next)\
+		|| 1);\
+		(NODE) = (TMP))
+
+/* Iterate in reverse order through each entry in the list safely
+ *
+ * Like list_foreach_reverse but entries can be removed safely.
+ *
+ * NODE is the iterator letting you access the current node.
+ * NODE will be reset to NULL at the end.
+ * TMP is another temporary value of the same type as NODE.
+ *
+ * Example:
+ * struct node *list, *node, *tmp;
+ * list_foreach_reverse_safe(&list, node, tmp) {
+ * 	printf("%d\n", node->some_value);
+ * }
+ */
+#define list_foreach_reverse_safe(LIST, NODE, TMP)\
+	for((NODE) = (*(LIST))->prev;\
+		(NODE) && (\
+		((TMP) = (NODE)->prev == (*(LIST))->prev ? \
+		(void*) 0 : (NODE)->prev)\
+		|| 1);\
+		(NODE) = (TMP))
 
 #endif

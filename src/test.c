@@ -9,10 +9,11 @@ struct element {
 };
 
 int main() {
-	struct element *list, *e, *element_A, *element_B, *element_C;
+	struct element *list, *e, *tmp, *element_A, *element_B, *element_C;
 
 	list = NULL;
 	e = NULL;
+	tmp = NULL;
 	element_A = NULL;
 	element_B = NULL;
 	element_C = NULL;
@@ -60,30 +61,17 @@ int main() {
 	list_foreach(&list, e) {
 		printf("\t%d\n", e->number);
 	};
-
-	list_remove(&list, element_C);
-
-	printf("\nAfter C removed\n");
-	printf("element_A: %d\n", element_A->number);
-	printf("element_A->next: %d\n", element_A->next->number);
-	printf("element_A->prev: %d\n", element_A->prev->number);
-	printf("element_B: %d\n", element_B->number);
-	printf("element_B->next: %d\n", element_B->next->number);
-	printf("element_B->prev: %d\n", element_B->prev->number);
-	printf("list: %d\n", list->number);
-
-	list_remove(&list, element_A);
-
-	printf("\nAfter A removed\n");
-	printf("element_B: %d\n", element_B->number);
-	printf("element_B->next: %d\n", element_B->next->number);
-	printf("element_B->prev: %d\n", element_B->prev->number);
-	printf("list: %d\n", list->number);
-
-	list_remove(&list, element_B);
-
-	printf("\nAfter B removed\n");
-	printf("list: %p\n", list);
+	printf("\nElements:\n");
+	list_foreach_safe(&list, e, tmp) {
+		printf("\t%d, %d\n", e->number, tmp ? tmp->number : -1);
+		list_remove(&list, e);
+		free(e);
+	}
+	printf("\nElements:\n");
+	list_foreach(&list, e) {
+		printf("\t%d\n", e->number);
+	};
+	printf("done.\n");
 
 	return 0;
 }
