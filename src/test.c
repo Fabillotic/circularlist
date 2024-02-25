@@ -346,6 +346,108 @@ int test_empty_iteration() {
 	return 0;
 }
 
+int test_single_iteration() {
+	int i;
+	struct element *list, *e, *tmp;
+
+	list = NULL;
+
+	e = create_element('E');
+	list_insert_last(&list, e);
+
+	i = 0;
+	list_foreach(&list, tmp) {
+		tassert(tmp == e);
+		tassert(i == 0);
+		i++;
+	}
+
+	i = 0;
+	list_foreach_reverse(&list, tmp) {
+		tassert(tmp == e);
+		tassert(i == 0);
+		i++;
+	}
+
+	free(e);
+
+	return 0;
+}
+
+int test_iteration_removal() {
+	int i;
+	struct element *list, *node, *tmp, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_insert_last(&list, elmA);
+	elmB = create_element('B');
+	list_insert_last(&list, elmB);
+	elmC = create_element('C');
+	list_insert_last(&list, elmC);
+	elmD = create_element('D');
+	list_insert_last(&list, elmD);
+	elmE = create_element('E');
+	list_insert_last(&list, elmE);
+
+	i = 0;
+	list_foreach_safe(&list, node, tmp) {
+		switch(i) {
+			case 0: tassert(node == elmA); break;
+			case 1: tassert(node == elmB); break;
+			case 2: tassert(node == elmC); break;
+			case 3: tassert(node == elmD); break;
+			case 4: tassert(node == elmE); break;
+			default: tassert(FALSE && "unreachable"); break;
+		}
+		list_remove(&list, node);
+		free(node);
+		i++;
+	}
+
+	tassert(list_is_empty(&list));
+
+	return 0;
+}
+
+int test_iteration_removal_reverse() {
+	int i;
+	struct element *list, *node, *tmp, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_insert_last(&list, elmA);
+	elmB = create_element('B');
+	list_insert_last(&list, elmB);
+	elmC = create_element('C');
+	list_insert_last(&list, elmC);
+	elmD = create_element('D');
+	list_insert_last(&list, elmD);
+	elmE = create_element('E');
+	list_insert_last(&list, elmE);
+
+	i = 0;
+	list_foreach_reverse_safe(&list, node, tmp) {
+		switch(i) {
+			case 0: tassert(node == elmE); break;
+			case 1: tassert(node == elmD); break;
+			case 2: tassert(node == elmC); break;
+			case 3: tassert(node == elmB); break;
+			case 4: tassert(node == elmA); break;
+			default: tassert(FALSE && "unreachable"); break;
+		}
+		list_remove(&list, node);
+		free(node);
+		i++;
+	}
+
+	tassert(list_is_empty(&list));
+
+	return 0;
+}
+
 int main() {
 	int i, num_tests, failures;
 
@@ -358,6 +460,9 @@ int main() {
 		declare_test(test_iteration),
 		declare_test(test_iteration_reverse),
 		declare_test(test_empty_iteration),
+		declare_test(test_single_iteration),
+		declare_test(test_iteration_removal),
+		declare_test(test_iteration_removal_reverse),
 	};
 
 	num_tests = sizeof(tests) / sizeof(struct test);
