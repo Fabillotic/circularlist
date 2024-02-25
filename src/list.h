@@ -3,6 +3,35 @@
 
 /* Circular doubly linked list implementation
  *
+ * This file implements macros to work with circular doubly linked lists.
+ *
+ * The nodes in these lists reference each other with two pointers: One pointing
+ * to the next node in the list and one pointing to the previous node in the
+ * list. Additionally what sets this type of list apart from the usual
+ * non-circular singly linked list is that the last node of the list points to
+ * the first node and the first node to the last. This leads to a circular
+ * arrangement of nodes like this:
+ *
+ *  +-----------------------------------------------+
+ *  |                                               |
+ *  |    +---A---+      +---B---+      +---C---+    |
+ *  +--> |   next| ---> |   next| ---> |   next| ---+
+ *       |       |      |       |      |       |
+ *  +--- |prev   | <--- |prev   | <--- |prev   | <--+
+ *  |    +-------+      +-------+      +-------+    |
+ *  |                                               |
+ *  +-----------------------------------------------+
+ *
+ * Circular doubly linked lists are more efficient than the usual non-circular
+ * singly linked list because inserting or removing a single element can be
+ * performed irrelevant of the amount of nodes in the list. In addition to that,
+ * both the first and last node can be easily accessed through the list pointer,
+ * (when /list/ is the head, /list->prev/ is the tail) and iterating through
+ * this type of list in reverse is as trivial as iterating forwards.
+ * Furthermore, circular doubly linked lists have an advantage over non-circular
+ * doubly linked lists because there is no need to save two list pointers
+ * (the head and the tail) and instead only one is necessary.
+ *
  * These macros assume that all node elements have a /next/ and /prev/ element
  * like this:
  * struct node {
@@ -11,11 +40,21 @@
  * 	--SOME DATA--
  * };
  *
- * LISTs are expected to be double pointers like /struct node ** / because
+ * LISTs are represented as a pointer to the first node in the list. In these
+ * macros they're expected to be double pointers like /struct node ** / because
  * where the start of the list points to could change when inserting/deleting
- * nodes.
+ * nodes. As such, initializing a list means just making a pointer variable and
+ * setting it to NULL.
  *
  * NODEs are expected to be single pointers like /struct node * /.
+ * They don't require any special initialization, as list_insert_* will set the
+ * next and prev fields accordingly.
+ *
+ * These assumptions are more for the purpose of convention than anything else
+ * because macros would very much be able to change LISTs even as single
+ * pointers and on the other hand NODE pointers are sometimes changed even
+ * though they are passed as a single pointer, for example when iterating with
+ * list_foreach.
  */
 
 /* Insert a node into the end of a list
