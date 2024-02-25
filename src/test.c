@@ -21,7 +21,7 @@ struct test {
 #define FALSE 0
 
 #define tassert(EVAL) if(!(EVAL)) {\
-	printf("ERROR! Assertion [%s] failed.\n", #EVAL); return 1;}
+	printf("\nERROR! Assertion [%s] failed.\n", #EVAL); return 1;}
 
 #define declare_test(TEST) {.name = #TEST, .func = TEST}
 
@@ -41,7 +41,7 @@ struct element* create_element(char id) {
 	elm = calloc(1, sizeof(struct element));
 
 	if(!elm) {
-		printf("Not enough memory! Failed to complete tests.\n");
+		printf("\n\nNot enough memory! Failed to complete tests.\n");
 		abort();
 	}
 
