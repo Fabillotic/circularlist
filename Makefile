@@ -6,11 +6,11 @@ LIST_H = $(SRC)/list.h
 TESTBIN = $(OUT)/test
 OBJ = $(OUT)/test.o
 
-CFLAGS = -Wall
+CFLAGS = -g -Wall
 LIBS = 
 
 $(TESTBIN): $(OBJ)
-	$(CC) -o $(TESTBIN) $(OBJ) $(LIBS)
+	$(CC) -g -o $(TESTBIN) $(OBJ) $(LIBS)
 
 # LIST_H is a prerequisite because it's the only thing that really matters for
 # this project and everything should be recompiled if it changes
