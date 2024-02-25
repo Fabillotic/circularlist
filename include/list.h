@@ -18,6 +18,10 @@
  * NODEs are expected to be single pointers like /struct node * /.
  */
 
+/* Insert a node into the end of a list
+ *
+ * This operation will make NODE be the last node in the list.
+ */
 #define list_insert_last(LIST, NODE) {\
 	if(*(LIST) == (void*) 0) {\
 		*(LIST) = (NODE);\
@@ -32,6 +36,22 @@
 	}\
 }
 
+/* Insert a node into the start of a list
+ *
+ * This operation will make NODE be the first node in the list.
+ *
+ * Because of the circular nature of this list type, this is equivalent to
+ * calling list_insert_last and updating the head of the list to NODE.
+ */
+#define list_insert_first(LIST, NODE) {\
+	list_insert_last(LIST, NODE)\
+	*LIST = NODE;\
+}
+
+/* Remove a node from a list
+ *
+ * This might change the head of the list when it is the one being removed.
+ */
 #define list_remove(LIST, NODE) {\
 	if(*(LIST) == (NODE)) *(LIST) = (NODE)->next;\
 	if(*(LIST) == (NODE)) *(LIST) = (void*) 0;\
@@ -40,6 +60,12 @@
 		(NODE)->prev->next = (NODE)->next;\
 	}\
 }
+
+/* Check whether a list is empty or not
+ *
+ * This macro evaluates to 1 if the list is empty.
+ */
+#define list_is_empty(LIST) (LIST == (void*) 0)
 
 /* Iterate through each entry in the list
  *

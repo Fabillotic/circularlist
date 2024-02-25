@@ -71,7 +71,32 @@ int main() {
 	list_foreach(&list, e) {
 		printf("\t%d\n", e->number);
 	};
-	printf("done.\n");
+
+	element_A = calloc(1, sizeof(struct element));
+	element_A->number = 1;
+	list_insert_first(&list, element_A);
+
+	element_B = calloc(1, sizeof(struct element));
+	element_B->number = 2;
+	list_insert_first(&list, element_B);
+
+	element_C = calloc(1, sizeof(struct element));
+	element_C->number = 3;
+	list_insert_first(&list, element_C);
+
+	printf("\nElements:\n");
+	list_foreach(&list, e) {
+		printf("\t%d\n", e->number);
+	};
+
+	list_foreach_safe(&list, e, tmp) {
+		list_remove(&list, e);
+		free(e);
+	}
+	printf("\nElements:\n");
+	list_foreach(&list, e) {
+		printf("\t%d\n", e->number);
+	};
 
 	return 0;
 }
