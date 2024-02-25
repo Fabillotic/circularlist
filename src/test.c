@@ -12,11 +12,18 @@
 
 typedef int (*testfunc_t)();
 
+struct test {
+	char *name;
+	testfunc_t func;
+};
+
 #define TRUE 1
 #define FALSE 0
 
 #define tassert(EVAL) if(!(EVAL)) {\
 	printf("ERROR! Assertion [%s] failed.\n", #EVAL); return 1;}
+
+#define declare_test(TEST) {.name = #TEST, .func = TEST}
 
 /* The struct for these tests
  * Similar structs will also work as well, as long as /next/ and /prev/ are
@@ -133,18 +140,19 @@ int test_insert_four_elements() {
 int main() {
 	int i, num_tests, failures;
 
-	testfunc_t tests[] = {
-		test_empty_list,
-		test_single_insert_delete,
-		test_insert_four_elements,
+	struct test tests[] = {
+		declare_test(test_empty_list),
+		declare_test(test_single_insert_delete),
+		declare_test(test_insert_four_elements),
 	};
 
-	num_tests = sizeof(tests) / sizeof(testfunc_t);
+	num_tests = sizeof(tests) / sizeof(struct test);
 
 	failures = 0;
 	for(i = 0; i < num_tests; i++) {
-		printf("Running test %d of %d...\n", i + 1, num_tests);
-		if(tests[i]() != 0) {
+		printf("Running test '%s' (%d of %d)...\n", tests[i].name,
+				i + 1, num_tests);
+		if(tests[i].func() != 0) {
 			printf("Test %d failed!\n", i + 1);
 			failures++;
 		}
