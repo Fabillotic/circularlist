@@ -65,7 +65,7 @@
  *
  * This macro evaluates to 1 if the list is empty.
  */
-#define list_is_empty(LIST) (LIST == (void*) 0)
+#define list_is_empty(LIST) (*(LIST) == (void*) 0)
 
 /* Iterate through each entry in the list
  *
