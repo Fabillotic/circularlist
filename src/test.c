@@ -469,13 +469,12 @@ int main() {
 
 	failures = 0;
 	for(i = 0; i < num_tests; i++) {
-		printf("Running test '%s' (%d of %d)... ", tests[i].name,
+		printf("Running test '%s' (%d of %d)...\n", tests[i].name,
 				i + 1, num_tests);
 		if(tests[i].func() != 0) {
-			printf("\nTest %d failed!\n", i + 1);
+			printf("Test %d failed!\n\n", i + 1);
 			failures++;
 		}
-		else printf("done.\n");
 	}
 
 	printf("\nCompleted %d tests with %d errors.\n", num_tests, failures);
