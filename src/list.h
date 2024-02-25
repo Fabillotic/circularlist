@@ -91,7 +91,8 @@
  * 	printf("%d\n", node->some_value);
  * }
  */
-#define list_foreach_reverse(LIST, NODE) for((NODE) = (*(LIST))->prev;\
+#define list_foreach_reverse(LIST, NODE) \
+	for((NODE) = (*LIST) ? (*(LIST))->prev : (void*) 0;\
 		(NODE);\
 		(NODE) = ((NODE)->prev == (*(LIST))->prev ? (void*) 0 : \
 			(NODE)->prev))
