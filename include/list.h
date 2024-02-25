@@ -70,7 +70,6 @@
 /* Iterate through each entry in the list
  *
  * NODE is the iterator letting you access the current node.
- * NODE will be reset to NULL at the end.
  *
  * Example:
  * struct node *list, *node;
@@ -85,7 +84,6 @@
 /* Iterate through each entry in the list in reverse order
  *
  * NODE is the iterator letting you access the current node.
- * NODE will be reset to NULL at the end.
  *
  * Example:
  * struct node *list, *node;
@@ -103,7 +101,6 @@
  * Like list_foreach but entries can be removed safely.
  *
  * NODE is the iterator letting you access the current node.
- * NODE will be reset to NULL at the end.
  * TMP is another temporary value of the same type as NODE.
  *
  * Note that when removing entries, the LIST pointer may be changed while
@@ -149,7 +146,6 @@
  * Like list_foreach_reverse but entries can be removed safely.
  *
  * NODE is the iterator letting you access the current node.
- * NODE will be reset to NULL at the end.
  * TMP is another temporary value of the same type as NODE.
  *
  * Example:
