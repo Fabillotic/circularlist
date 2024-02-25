@@ -448,6 +448,49 @@ int test_iteration_removal_reverse() {
 	return 0;
 }
 
+int test_insert_after() {
+	int i;
+	struct element *list, *tmp, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_insert_last(&list, elmA);
+
+	elmB = create_element('B');
+	list_insert_after(&list, elmB, elmA);
+
+	elmC = create_element('C');
+	list_insert_last(&list, elmC);
+
+	elmE = create_element('E');
+	list_insert_after(&list, elmE, elmB);
+
+	elmD = create_element('D');
+	list_insert_last(&list, elmD);
+
+	i = 0;
+	list_foreach(&list, tmp) {
+		switch(i) {
+			case 0: tassert(tmp == elmA); break;
+			case 1: tassert(tmp == elmB); break;
+			case 2: tassert(tmp == elmE); break;
+			case 3: tassert(tmp == elmC); break;
+			case 4: tassert(tmp == elmD); break;
+			default: tassert(FALSE && "unreachable"); break;
+		}
+		i++;
+	}
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+	free(elmE);
+
+	return 0;
+}
+
 int main() {
 	int i, num_tests, failures;
 
@@ -463,6 +506,7 @@ int main() {
 		declare_test(test_single_iteration),
 		declare_test(test_iteration_removal),
 		declare_test(test_iteration_removal_reverse),
+		declare_test(test_insert_after),
 	};
 
 	num_tests = sizeof(tests) / sizeof(struct test);

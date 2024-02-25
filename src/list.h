@@ -87,6 +87,19 @@
 	*LIST = NODE;\
 }
 
+/* Insert a node after another node
+ *
+ * Requirements:
+ * 	LIST has to have at least one node
+ * 	AFTER has to be in LIST
+ */
+#define list_insert_after(LIST, NODE, AFTER) {\
+	(NODE)->prev = (AFTER);\
+	(NODE)->next = (AFTER)->next;\
+	(AFTER)->next->prev = (NODE);\
+	(AFTER)->next = (NODE);\
+}
+
 /* Remove a node from a list
  *
  * This might change the head of the list when it is the one being removed.
