@@ -1,102 +1,156 @@
+/* Tests for list.h
+ *
+ * These tests ensure that the macros handle general operation and edge-cases in
+ * the manner that they are supposed to.
+ *
+ * If a test functions returns a non-zero value, it is deemed as an error.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
 
+typedef int (*testfunc_t)();
+
+#define TRUE 1
+#define FALSE 0
+
+#define tassert(EVAL) if(!(EVAL)) {\
+	printf("ERROR! Assertion [%s] failed.\n", #EVAL); return 1;}
+
+/* The struct for these tests
+ * Similar structs will also work as well, as long as /next/ and /prev/ are
+ * there with the correct type.
+ */
 struct element {
 	struct element *next;
 	struct element *prev;
-	int number;
+	char id;
 };
 
-int main() {
-	struct element *list, *e, *tmp, *element_A, *element_B, *element_C;
+struct element* create_element(char id) {
+	struct element *elm;
+
+	elm = calloc(1, sizeof(struct element));
+
+	if(!elm) {
+		printf("Not enough memory! Failed to complete tests.\n");
+		abort();
+	}
+
+	elm->id = id;
+
+	return elm;
+}
+
+int test_empty_list() {
+	struct element *list;
 
 	list = NULL;
-	e = NULL;
-	tmp = NULL;
-	element_A = NULL;
-	element_B = NULL;
-	element_C = NULL;
 
-	element_A = calloc(1, sizeof(struct element));
-	element_A->number = 1;
-	list_insert_last(&list, element_A);
+	tassert(list_is_empty(&list));
 
-	printf("After A inserted\n");
-	printf("element_A: %d\n", element_A->number);
-	printf("element_A->next: %d\n", element_A->next->number);
-	printf("element_A->prev: %d\n", element_A->prev->number);
-	printf("list: %d\n", list->number);
+	return 0;
+}
 
-	element_B = calloc(1, sizeof(struct element));
-	element_B->number = 2;
-	list_insert_last(&list, element_B);
+int test_single_insert_delete() {
+	struct element *list, *elmA;
 
-	printf("\nAfter B inserted\n");
-	printf("element_A: %d\n", element_A->number);
-	printf("element_A->next: %d\n", element_A->next->number);
-	printf("element_A->prev: %d\n", element_A->prev->number);
-	printf("element_B: %d\n", element_B->number);
-	printf("element_B->next: %d\n", element_B->next->number);
-	printf("element_B->prev: %d\n", element_B->prev->number);
-	printf("list: %d\n", list->number);
+	list = NULL;
 
-	element_C = calloc(1, sizeof(struct element));
-	element_C->number = 3;
-	list_insert_last(&list, element_C);
+	tassert(list_is_empty(&list));
 
-	printf("\nAfter C inserted\n");
-	printf("element_A: %d\n", element_A->number);
-	printf("element_A->next: %d\n", element_A->next->number);
-	printf("element_A->prev: %d\n", element_A->prev->number);
-	printf("element_B: %d\n", element_B->number);
-	printf("element_B->next: %d\n", element_B->next->number);
-	printf("element_B->prev: %d\n", element_B->prev->number);
-	printf("element_C: %d\n", element_C->number);
-	printf("element_C->next: %d\n", element_C->next->number);
-	printf("element_C->prev: %d\n", element_C->prev->number);
-	printf("list: %d\n", list->number);
+	elmA = create_element('A');
+	list_insert_last(&list, elmA);
 
-	printf("\nElements:\n");
-	list_foreach(&list, e) {
-		printf("\t%d\n", e->number);
+	tassert(!list_is_empty(&list));
+	tassert(elmA->next == elmA);
+	tassert(elmA->prev == elmA);
+
+	list_remove(&list, elmA);
+	tassert(list_is_empty(&list));
+
+	free(elmA);
+
+	return 0;
+}
+
+int test_insert_four_elements() {
+	struct element *list, *elmA, *elmB, *elmC, *elmD;
+
+	list = NULL;
+
+	tassert(list_is_empty(&list));
+
+	elmA = create_element('A');
+	list_insert_last(&list, elmA);
+
+	tassert(list == elmA);
+	tassert(elmA->next == elmA);
+	tassert(elmA->prev == elmA);
+
+	elmB = create_element('B');
+	list_insert_last(&list, elmB);
+
+	tassert(list == elmA);
+	tassert(elmA->next == elmB);
+	tassert(elmA->prev == elmB);
+	tassert(elmB->next == elmA);
+	tassert(elmB->prev == elmA);
+
+	elmC = create_element('C');
+	list_insert_last(&list, elmC);
+
+	tassert(list == elmA);
+	tassert(elmA->next == elmB);
+	tassert(elmA->prev == elmC);
+	tassert(elmB->next == elmC);
+	tassert(elmB->prev == elmA);
+	tassert(elmC->next == elmA);
+	tassert(elmC->prev == elmB);
+
+	elmD = create_element('D');
+	list_insert_last(&list, elmD);
+
+	tassert(list == elmA);
+	tassert(elmA->next == elmB);
+	tassert(elmA->prev == elmD);
+	tassert(elmB->next == elmC);
+	tassert(elmB->prev == elmA);
+	tassert(elmC->next == elmD);
+	tassert(elmC->prev == elmB);
+	tassert(elmD->next == elmA);
+	tassert(elmD->prev == elmC);
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+
+	return 0;
+}
+
+int main() {
+	int i, num_tests, failures;
+
+	testfunc_t tests[] = {
+		test_empty_list,
+		test_single_insert_delete,
+		test_insert_four_elements,
 	};
-	printf("\nElements:\n");
-	list_foreach_safe(&list, e, tmp) {
-		printf("\t%d, %d\n", e->number, tmp ? tmp->number : -1);
-		list_remove(&list, e);
-		free(e);
+
+	num_tests = sizeof(tests) / sizeof(testfunc_t);
+
+	failures = 0;
+	for(i = 0; i < num_tests; i++) {
+		printf("Running test %d of %d...\n", i + 1, num_tests);
+		if(tests[i]() != 0) {
+			printf("Test %d failed!\n", i + 1);
+			failures++;
+		}
 	}
-	printf("\nElements:\n");
-	list_foreach(&list, e) {
-		printf("\t%d\n", e->number);
-	};
 
-	element_A = calloc(1, sizeof(struct element));
-	element_A->number = 1;
-	list_insert_first(&list, element_A);
-
-	element_B = calloc(1, sizeof(struct element));
-	element_B->number = 2;
-	list_insert_first(&list, element_B);
-
-	element_C = calloc(1, sizeof(struct element));
-	element_C->number = 3;
-	list_insert_first(&list, element_C);
-
-	printf("\nElements:\n");
-	list_foreach(&list, e) {
-		printf("\t%d\n", e->number);
-	};
-
-	list_foreach_safe(&list, e, tmp) {
-		list_remove(&list, e);
-		free(e);
-	}
-	printf("\nElements:\n");
-	list_foreach(&list, e) {
-		printf("\t%d\n", e->number);
-	};
+	printf("\nCompleted %d tests with %d errors.\n", num_tests, failures);
 
 	return 0;
 }
