@@ -1,17 +1,16 @@
 OUT = build
 SRC = src
-INC = include
 
-LIST_H = $(INC)/list.h
+LIST_H = $(SRC)/list.h
 
-BIN = $(OUT)/test
+TESTBIN = $(OUT)/test
 OBJ = $(OUT)/test.o
 
-CFLAGS = -Wall -I$(INC)
+CFLAGS = -Wall
 LIBS = 
 
-$(BIN): $(OBJ)
-	$(CC) -o $(BIN) $(OBJ) $(LIBS)
+$(TESTBIN): $(OBJ)
+	$(CC) -o $(TESTBIN) $(OBJ) $(LIBS)
 
 # LIST_H is a prerequisite because it's the only thing that really matters for
 # this project and everything should be recompiled if it changes
@@ -19,9 +18,9 @@ $(OUT)/%.o: $(SRC)/%.c $(LIST_H)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(BIN) $(OBJ)
+	rm -f $(TESTBIN) $(OBJ)
 
-run: $(BIN)
-	./$(BIN)
+test: $(TESTBIN)
+	./$(TESTBIN)
 
-.PHONY: clean run
+.PHONY: clean test
