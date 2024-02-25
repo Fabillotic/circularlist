@@ -323,7 +323,7 @@ int test_iteration_reverse() {
 }
 
 int test_empty_iteration() {
-	struct element *list, *tmp;
+	struct element *list, *tmp, *tmp2;
 
 	list = NULL;
 
@@ -332,6 +332,14 @@ int test_empty_iteration() {
 	}
 
 	list_foreach_reverse(&list, tmp) {
+		tassert(FALSE && "unreachable");
+	}
+
+	list_foreach_safe(&list, tmp, tmp2) {
+		tassert(FALSE && "unreachable");
+	}
+
+	list_foreach_reverse_safe(&list, tmp, tmp2) {
 		tassert(FALSE && "unreachable");
 	}
 

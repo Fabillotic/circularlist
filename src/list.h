@@ -156,7 +156,7 @@
  * }
  */
 #define list_foreach_reverse_safe(LIST, NODE, TMP)\
-	for((NODE) = (*(LIST))->prev;\
+	for((NODE) = (*LIST) ? (*(LIST))->prev : (void*) 0;\
 		(NODE) && (\
 		((TMP) = (NODE)->prev == (*(LIST))->prev ? \
 		(void*) 0 : (NODE)->prev)\
