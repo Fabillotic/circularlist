@@ -24,7 +24,7 @@ int main() {
 		node = calloc(1, sizeof(struct node));
 		node->value = i + 1;
 
-		list_insert_last(&list, node);
+		list_append(&list, node);
 	}
 
 	// Iterate through the list

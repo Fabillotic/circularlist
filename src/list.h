@@ -47,8 +47,8 @@
  * setting it to NULL.
  *
  * NODEs are expected to be single pointers like /struct node * /.
- * They don't require any special initialization, as list_insert_* will set the
- * next and prev fields accordingly.
+ * They don't require any special initialization, all of this is handled when
+ * inserting nodes into the list.
  *
  * These assumptions are more for the purpose of convention than anything else
  * because macros would very much be able to change LISTs even as single
@@ -61,7 +61,7 @@
  *
  * This operation will make NODE be the last node in the list.
  */
-#define list_insert_last(LIST, NODE) {\
+#define list_append(LIST, NODE) {\
 	if(*(LIST) == (void*) 0) {\
 		*(LIST) = (NODE);\
 		(NODE)->next = (NODE);\
@@ -80,10 +80,10 @@
  * This operation will make NODE be the first node in the list.
  *
  * Because of the circular nature of this list type, this is equivalent to
- * calling list_insert_last and updating the head of the list to NODE.
+ * calling list_append and updating the head of the list to NODE.
  */
-#define list_insert_first(LIST, NODE) {\
-	list_insert_last(LIST, NODE)\
+#define list_prepend(LIST, NODE) {\
+	list_append(LIST, NODE)\
 	*LIST = NODE;\
 }
 

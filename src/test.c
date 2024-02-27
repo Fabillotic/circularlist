@@ -68,7 +68,7 @@ int test_single_insert_delete() {
 	tassert(list_is_empty(&list));
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 
 	tassert(!list_is_empty(&list));
 	tassert(elmA->next == elmA);
@@ -90,14 +90,14 @@ int test_insert_four_elements() {
 	tassert(list_is_empty(&list));
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 
 	tassert(list == elmA);
 	tassert(elmA->next == elmA);
 	tassert(elmA->prev == elmA);
 
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 
 	tassert(list == elmA);
 	tassert(elmA->next == elmB);
@@ -106,7 +106,7 @@ int test_insert_four_elements() {
 	tassert(elmB->prev == elmA);
 
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 
 	tassert(list == elmA);
 	tassert(elmA->next == elmB);
@@ -117,7 +117,7 @@ int test_insert_four_elements() {
 	tassert(elmC->prev == elmB);
 
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 
 	tassert(list == elmA);
 	tassert(elmA->next == elmB);
@@ -145,14 +145,14 @@ int test_insert_four_elements_reverse() {
 	tassert(list_is_empty(&list));
 
 	elmA = create_element('A');
-	list_insert_first(&list, elmA);
+	list_prepend(&list, elmA);
 
 	tassert(list == elmA);
 	tassert(elmA->next == elmA);
 	tassert(elmA->prev == elmA);
 
 	elmB = create_element('B');
-	list_insert_first(&list, elmB);
+	list_prepend(&list, elmB);
 
 	tassert(list == elmB);
 	tassert(elmB->next == elmA);
@@ -161,7 +161,7 @@ int test_insert_four_elements_reverse() {
 	tassert(elmA->prev == elmB);
 
 	elmC = create_element('C');
-	list_insert_first(&list, elmC);
+	list_prepend(&list, elmC);
 
 	tassert(list == elmC);
 	tassert(elmC->next == elmB);
@@ -172,7 +172,7 @@ int test_insert_four_elements_reverse() {
 	tassert(elmA->prev == elmB);
 
 	elmD = create_element('D');
-	list_insert_first(&list, elmD);
+	list_prepend(&list, elmD);
 
 	tassert(list == elmD);
 	tassert(elmD->next == elmC);
@@ -198,13 +198,13 @@ int test_four_element_removal() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 
 	tassert(list == elmA);
 
@@ -251,15 +251,15 @@ int test_iteration() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 	elmE = create_element('E');
-	list_insert_last(&list, elmE);
+	list_append(&list, elmE);
 
 	i = 0;
 	list_foreach(&list, tmp) {
@@ -290,15 +290,15 @@ int test_iteration_reverse() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 	elmE = create_element('E');
-	list_insert_last(&list, elmE);
+	list_append(&list, elmE);
 
 	i = 0;
 	list_foreach_reverse(&list, tmp) {
@@ -353,7 +353,7 @@ int test_single_iteration() {
 	list = NULL;
 
 	e = create_element('E');
-	list_insert_last(&list, e);
+	list_append(&list, e);
 
 	i = 0;
 	list_foreach(&list, tmp) {
@@ -381,15 +381,15 @@ int test_iteration_removal() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 	elmE = create_element('E');
-	list_insert_last(&list, elmE);
+	list_append(&list, elmE);
 
 	i = 0;
 	list_foreach_safe(&list, node, tmp) {
@@ -418,15 +418,15 @@ int test_iteration_removal_reverse() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 	elmE = create_element('E');
-	list_insert_last(&list, elmE);
+	list_append(&list, elmE);
 
 	i = 0;
 	list_foreach_reverse_safe(&list, node, tmp) {
@@ -455,19 +455,19 @@ int test_insert_after() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 
 	elmB = create_element('B');
 	list_insert_after(&list, elmB, elmA);
 
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 
 	elmE = create_element('E');
 	list_insert_after(&list, elmE, elmB);
 
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 
 	i = 0;
 	list_foreach(&list, tmp) {
@@ -498,15 +498,15 @@ int test_iteration_end() {
 	list = NULL;
 
 	elmA = create_element('A');
-	list_insert_last(&list, elmA);
+	list_append(&list, elmA);
 	elmB = create_element('B');
-	list_insert_last(&list, elmB);
+	list_append(&list, elmB);
 	elmC = create_element('C');
-	list_insert_last(&list, elmC);
+	list_append(&list, elmC);
 	elmD = create_element('D');
-	list_insert_last(&list, elmD);
+	list_append(&list, elmD);
 	elmE = create_element('E');
-	list_insert_last(&list, elmE);
+	list_append(&list, elmE);
 
 	i = 0;
 	list_foreach(&list, tmp) {
