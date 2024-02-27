@@ -3,14 +3,22 @@ SRC = src
 
 LIST_H = $(SRC)/list.h
 
-TESTBIN = $(OUT)/test
-OBJ = $(OUT)/test.o
+EXAMPLE_BIN = $(OUT)/example
+EXAMPLE_OBJ = $(OUT)/example.o
+
+TEST_BIN = $(OUT)/test
+TEST_OBJ = $(OUT)/test.o
 
 CFLAGS = -g -Wall
 LIBS = 
 
-$(TESTBIN): $(OBJ)
-	$(CC) -g -o $(TESTBIN) $(OBJ) $(LIBS)
+all: $(EXAMPLE_BIN) $(TEST_BIN)
+
+$(EXAMPLE_BIN): $(EXAMPLE_OBJ)
+	$(CC) -g -o $(EXAMPLE_BIN) $(EXAMPLE_OBJ) $(LIBS)
+
+$(TEST_BIN): $(TEST_OBJ)
+	$(CC) -g -o $(TEST_BIN) $(TEST_OBJ) $(LIBS)
 
 # LIST_H is a prerequisite because it's the only thing that really matters for
 # this project and everything should be recompiled if it changes
@@ -18,9 +26,12 @@ $(OUT)/%.o: $(SRC)/%.c $(LIST_H)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(TESTBIN) $(OBJ)
+	rm -f $(EXAMPLE_BIN) $(TEST_BIN) $(EXAMPLE_OBJ) $(TEST_OBJ)
 
-test: $(TESTBIN)
-	./$(TESTBIN)
+example: $(EXAMPLE_BIN)
+	./$(EXAMPLE_BIN)
 
-.PHONY: clean test
+test: $(TEST_BIN)
+	./$(TEST_BIN)
+
+.PHONY: all clean example test
