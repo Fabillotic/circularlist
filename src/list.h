@@ -100,6 +100,20 @@
 	(AFTER)->next = (NODE);\
 }
 
+/* Insert a node before another node
+ *
+ * Requirements:
+ * 	LIST has to have at least one node
+ * 	BEFORE has to be in LIST
+ */
+#define list_insert_before(LIST, NODE, BEFORE) {\
+	(NODE)->prev = (BEFORE)->prev;\
+	(NODE)->next = (BEFORE);\
+	(BEFORE)->prev->next = (NODE);\
+	(BEFORE)->prev = (NODE);\
+	if((BEFORE) == *(LIST)) *(LIST) = (NODE);\
+}
+
 /* Remove a node from a list
  *
  * This might change the head of the list when it is the one being removed.

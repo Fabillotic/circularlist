@@ -491,6 +491,49 @@ int test_insert_after() {
 	return 0;
 }
 
+int test_insert_before() {
+	int i;
+	struct element *list, *tmp, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_append(&list, elmA);
+
+	elmB = create_element('B');
+	list_insert_before(&list, elmB, elmA);
+
+	elmC = create_element('C');
+	list_append(&list, elmC);
+
+	elmE = create_element('E');
+	list_insert_before(&list, elmE, elmC);
+
+	elmD = create_element('D');
+	list_append(&list, elmD);
+
+	i = 0;
+	list_foreach(&list, tmp) {
+		switch(i) {
+			case 0: tassert(tmp == elmB); break;
+			case 1: tassert(tmp == elmA); break;
+			case 2: tassert(tmp == elmE); break;
+			case 3: tassert(tmp == elmC); break;
+			case 4: tassert(tmp == elmD); break;
+			default: tassert(FALSE && "unreachable"); break;
+		}
+		i++;
+	}
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+	free(elmE);
+
+	return 0;
+}
+
 int test_iteration_end() {
 	int i;
 	struct element *list, *tmp, *tmp2, *elmA, *elmB, *elmC, *elmD, *elmE;
@@ -589,6 +632,7 @@ int main() {
 		declare_test(test_iteration_removal),
 		declare_test(test_iteration_removal_reverse),
 		declare_test(test_insert_after),
+		declare_test(test_insert_before),
 		declare_test(test_iteration_end),
 	};
 
