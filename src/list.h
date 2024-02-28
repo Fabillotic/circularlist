@@ -1,9 +1,9 @@
 #ifndef LIST_H
 #define LIST_H
 
-/* Circular doubly linked list implementation
+/* circularlist v1.0.0
  *
- * This file implements macros to work with circular doubly linked lists.
+ * Circular doubly linked list implementation
  *
  * The nodes in these lists reference each other with two pointers: One pointing
  * to the next node in the list and one pointing to the previous node in the
