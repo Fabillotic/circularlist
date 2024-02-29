@@ -616,6 +616,64 @@ int test_iteration_end() {
 	return 0;
 }
 
+int test_size() {
+	struct element *list, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_append(&list, elmA);
+	elmB = create_element('B');
+	list_append(&list, elmB);
+	elmC = create_element('C');
+	list_append(&list, elmC);
+	elmD = create_element('D');
+	list_append(&list, elmD);
+	elmE = create_element('E');
+	list_append(&list, elmE);
+
+	tassert(list_size(&list) == 5);
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+	free(elmE);
+
+	return 0;
+}
+
+int test_get() {
+	struct element *list, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_append(&list, elmA);
+	elmB = create_element('B');
+	list_append(&list, elmB);
+	elmC = create_element('C');
+	list_append(&list, elmC);
+	elmD = create_element('D');
+	list_append(&list, elmD);
+	elmE = create_element('E');
+	list_append(&list, elmE);
+
+	tassert(list_get(&list, 0) == elmA);
+	tassert(list_get(&list, 1) == elmB);
+	tassert(list_get(&list, 2) == elmC);
+	tassert(list_get(&list, 3) == elmD);
+	tassert(list_get(&list, 4) == elmE);
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+	free(elmE);
+
+	return 0;
+}
+
 int main() {
 	int i, num_tests, failures;
 
@@ -634,6 +692,8 @@ int main() {
 		declare_test(test_insert_after),
 		declare_test(test_insert_before),
 		declare_test(test_iteration_end),
+		declare_test(test_size),
+		declare_test(test_get),
 	};
 
 	num_tests = sizeof(tests) / sizeof(struct test);
