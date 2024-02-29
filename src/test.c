@@ -21,7 +21,9 @@ struct test {
 #define FALSE 0
 
 #define tassert(EVAL) if(!(EVAL)) {\
-	printf("\nERROR! Assertion [%s] failed.\n", #EVAL); return 1;}
+	printf("\nERROR! %s:%d Assertion [%s] failed.\n",\
+			__FILE__, __LINE__, #EVAL);\
+	return 1;}
 
 #define declare_test(TEST) {.name = #TEST, .func = TEST}
 
