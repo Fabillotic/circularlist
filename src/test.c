@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "list.h"
+#include "avlist.h"
 
 typedef int (*testfunc_t)();
 

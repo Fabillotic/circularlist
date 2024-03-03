@@ -7,7 +7,8 @@ EXAMPLE_BIN = $(OUT)/example
 EXAMPLE_OBJ = $(OUT)/example.o
 
 TEST_BIN = $(OUT)/test
-TEST_OBJ = $(OUT)/test.o
+TEST_OBJ = $(OUT)/test.o \
+	   $(OUT)/avlist.o
 
 CFLAGS = -g -Wall
 LIBS = 
