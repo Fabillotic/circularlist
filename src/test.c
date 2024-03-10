@@ -619,6 +619,45 @@ int test_iteration_end() {
 	return 0;
 }
 
+int test_iteration_until() {
+	int i;
+	struct element *list, *tmp, *elmA, *elmB, *elmC, *elmD, *elmE;
+
+	list = NULL;
+
+	elmA = create_element('A');
+	list_append(&list, elmA);
+	elmB = create_element('B');
+	list_append(&list, elmB);
+	elmC = create_element('C');
+	list_append(&list, elmC);
+	elmD = create_element('D');
+	list_append(&list, elmD);
+	elmE = create_element('E');
+	list_append(&list, elmE);
+
+	i = 0;
+	list_foreach_until(&list, tmp, elmE) {
+		tassert(tmp != elmE); // element E won't be reached
+		switch(i) {
+			case 0: tassert(tmp == elmA); break;
+			case 1: tassert(tmp == elmB); break;
+			case 2: tassert(tmp == elmC); break;
+			case 3: tassert(tmp == elmD); break;
+			default: tassert(FALSE && "unreachable"); break;
+		}
+		i++;
+	}
+
+	free(elmA);
+	free(elmB);
+	free(elmC);
+	free(elmD);
+	free(elmE);
+
+	return 0;
+}
+
 int test_size() {
 	struct element *list, *elmA, *elmB, *elmC, *elmD, *elmE;
 
@@ -695,6 +734,7 @@ int main() {
 		declare_test(test_insert_after),
 		declare_test(test_insert_before),
 		declare_test(test_iteration_end),
+		declare_test(test_iteration_until),
 		declare_test(test_size),
 		declare_test(test_get),
 	};

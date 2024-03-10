@@ -229,4 +229,19 @@
 		|| 1);\
 		(NODE) = (TMP))
 
+/* Iterate through each entry in the list until reaching a certain node
+ *
+ * NODE is the iterator letting you access the current node.
+ * UNTIL will never be visited by the loop.
+ *
+ * Example visiting all but the last node:
+ * struct node *list, *node;
+ * list_foreach_until(&list, node, list->prev) {
+ * 	printf("%d\n", node->some_value);
+ * }
+ */
+#define list_foreach_until(LIST, NODE, UNTIL) for((NODE) = *(LIST);\
+		(NODE);\
+		(NODE) = ((NODE)->next == (UNTIL) ? (void*) 0 : (NODE)->next))
+
 #endif
