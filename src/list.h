@@ -1,7 +1,7 @@
 #ifndef LIST_H
 #define LIST_H
 
-/* circularlist v1.2.0
+/* circularlist v1.2.1
  *
  * Circular doubly linked list implementation
  *
