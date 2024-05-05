@@ -259,6 +259,9 @@
  * This metadata struct gets put at the front of the allocated memory block.
  * The array pointer starts after this metadata struct, as such the resulting
  * pointer can be used like a normal C array.
+ *
+ * It is incredibly important that you do not attempt to free the dynamic array
+ * by itself! Always use the array_free macro.
  */
 struct dyn_array_data {
 	int count; // amount of elements in array
