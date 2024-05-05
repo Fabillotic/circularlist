@@ -58,6 +58,9 @@
  */
 
 /* UNLICENSE
+This specific header file is, in its entirety, licensed under the Unlicense.
+The license text goes as follows:
+
 This is free and unencumbered software released into the public domain.
 
 Anyone is free to copy, modify, publish, use, compile, sell, or
