@@ -297,9 +297,39 @@ PERFORMANCE OF THIS SOFTWARE.
 	(A)->data = (void*) 0;\
 }
 
-/* Free the array
+/* Free dynamic array data
+ *
+ * This convenience macro free's the data pointer of the dynamic array, when
+ * it is not NULL and after free'ing updates it to NULL.
+ * Additionally, this macro also resets the `count` and `alloc` fields of the
+ * dynamic array structure.
+ *
+ * This macro DOES NOT attempt to free the dynamic array structure, because it
+ * might only be part of another structure or a local variable on the stack.
+ *
+ * Because all of the fields are reset to an initial state and the structure
+ * itself will not be free'd, this macro also serves effectively serves the
+ * functionality of fully clearing the array.
  */
-#define array_free(A) {if((A)->data) free((A)->data);}
+#define array_free(A) {\
+	if((A)->data) {\
+		free((A)->data);\
+		(A)->data = (void*) 0;\
+	}\
+	(A)->count = 0;\
+	(A)->alloc = 0;\
+}
+
+/* Remove all elements from the dynamic array and reset it to an initial state
+ *
+ * This macro simply evaluates to array_free for reasons explained in that
+ * macros documentation.
+ *
+ * It should be used to clarify the semantic difference between destroying
+ * the dynamic array and freeing up all of its resources and simply
+ * clearing it for later use.
+ */
+#define array_clear(A) array_free(A)
 
 /* Reserve a certain amount of elements
  *

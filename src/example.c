@@ -68,6 +68,14 @@ void example_array() {
 		printf("%d\n", vals.data[i]);
 	}
 
+	// Clear the array
+	array_clear(&vals);
+
+	// Add different values
+	for(i = 0; i < 5; i++) {
+		array_append(&vals, 5 - i);
+	}
+
 	// Free the array
 	array_free(&vals);
 }
