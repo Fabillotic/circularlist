@@ -45,31 +45,31 @@ void example_list() {
 
 void example_array() {
 	int i, n;
-	int *vals;
+	dyn_array(int) vals;
 	int othervals[] = {17, 18, 19, 20, 21, 22, 23, 24};
 
 	n = sizeof(othervals) / sizeof(int);
 
-	// create a new int array
-	array_new(&vals, int);
+	// intinitalize array
+	array_init(&vals, int);
 
 	// add 16 values
 	for(i = 0; i < 16; i++) {
-		array_append(vals, i + 1);
+		array_append(&vals, i + 1);
 	}
 
 	// manually expand array and copy values
-	array_reserve(vals, array_len(vals) + n);
-	memcpy(vals + array_len(vals), othervals, sizeof(int) * n);
-	array_len(vals) += n;
+	array_reserve(&vals, vals.count + n);
+	memcpy(vals.data + vals.count, othervals, sizeof(int) * n);
+	vals.count += n;
 
 	// print the values
-	for(i = 0; i < array_len(vals); i++) {
-		printf("%d\n", vals[i]);
+	for(i = 0; i < vals.count; i++) {
+		printf("%d\n", vals.data[i]);
 	}
 
 	// free the array
-	array_free(vals);
+	array_free(&vals);
 }
 
 int main() {

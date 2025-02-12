@@ -263,88 +263,54 @@ PERFORMANCE OF THIS SOFTWARE.
 
 
 /* Dynamic arrays
- *
- *         true memory pointer
- *         V
- * memory: | ARRAY METADATA |[ Element 0 ][ Element 1 ][ Element 2 ]
- *                           ^
- *                           the pointer you get
- *
- * These arrays grow as more and more elements are added.
- * All of the elements contained in the array have to be of the same size.
- *
- * This metadata struct gets put at the front of the allocated memory block.
- * The array pointer starts after this metadata struct, as such the resulting
- * pointer can be used like a normal C array.
- *
- * It is incredibly important that you do not attempt to free the dynamic array
- * by itself! Always use the array_free macro.
  */
-struct dyn_array_data {
-	int count; // amount of elements in array
-	int alloc; // amount of elements allocated
-	int esize; // bytes in a single element
-};
+#define dyn_array(TYPE) struct {\
+	size_t count; /* amount of elements in array */ \
+	size_t alloc; /* amount of elements allocated */ \
+	size_t esize; /* bytes in a single element */ \
+	TYPE* data;   /* data pointer */ \
+}
 
-#define dyn_array_msize sizeof(struct dyn_array_data)
-
-/* Get the pointer to the metadata of the dynamic array
+/* Initialize dynamic array
  *
- * This pointer is equivalent to the true memory pointer of the array.
- */
-#define array_meta(A) (((struct dyn_array_data*) (void*) (A)) - 1)
-
-/* Reverse of array_meta
- *
- * Calculates the array pointer of the given memory pointer.
- */
-#define array_ptr_off(P) ((void*) ((struct dyn_array_data*) (P) + 1))
-
-/* Amount of elements in an array
- */
-#define array_len(A) (array_meta(A)->count)
-
-/* Amount of elements allocated by the array
- */
-#define array_allocated(A) (array_meta(A)->alloc)
-
-/* Allocate a new empty array
- *
- * Creates a new array and writes the pointer to the memory pointed to by P.
- * T gives the type of the array elements.
- * Thus, P should be of type T**.
+ * This macro MUST be invoked before the array is used for the first time.
  *
  * Example:
- * int* values;
- * array_new(&values, int);
+ * dyn_array(int) values;
+ * array_init(&values, int);
  */
-#define array_new(P, T) {\
-	*(P) = array_ptr_off(calloc(1, dyn_array_msize)); \
-	array_meta((*P))->esize = sizeof(T);\
+#define array_init(A, TYPE) {\
+	(A)->esize = sizeof(TYPE);\
+	(A)->count = 0;\
+	(A)->alloc = 0;\
+	(A)->data = (void*) 0;\
 }
 
 /* Free the array
  */
-#define array_free(A) free(array_meta(A))
+#define array_free(A) {if((A)->data) free((A)->data);}
 
 /* Reserve a certain amount of elements
  *
  * This macro reserves the space for at least R elements in the array.
  */
 #define array_reserve(A, R) {\
-	while(array_meta(A)->alloc < (R)) {\
-		if(array_meta(A)->alloc == 0) array_meta(A)->alloc = 8;\
-		else array_meta(A)->alloc *= 2;\
-		(A) = array_ptr_off(realloc(array_meta(A), dyn_array_msize + \
-				array_meta(A)->alloc * array_meta(A)->esize));\
+	while((A)->alloc < (R)) {\
+		if((A)->alloc == 0) {\
+			(A)->alloc = 8;\
+			(A)->data = malloc((A)->alloc * (A)->esize);\
+			continue;\
+		}\
+		(A)->alloc *= 2;\
+		(A)->data = realloc((A)->data, (A)->alloc * (A)->esize);\
 	}\
 }
 
 /* Add a value to the end of an array
  */
 #define array_append(A, E) {\
-	array_reserve(A, array_len(A) + 1);\
-	(A)[array_meta(A)->count++] = (E);\
+	array_reserve(A, (A)->count + 1);\
+	(A)->data[(A)->count++] = (E);\
 }
 
 #endif
