@@ -50,25 +50,25 @@ void example_array() {
 
 	n = sizeof(othervals) / sizeof(int);
 
-	// intinitalize array
+	// Intinitalize array
 	array_init(&vals, int);
 
-	// add 16 values
+	// Add 16 values
 	for(i = 0; i < 16; i++) {
 		array_append(&vals, i + 1);
 	}
 
-	// manually expand array and copy values
+	// Manually expand array and copy values
 	array_reserve(&vals, vals.count + n);
 	memcpy(vals.data + vals.count, othervals, sizeof(int) * n);
 	vals.count += n;
 
-	// print the values
+	// Print the values
 	for(i = 0; i < vals.count; i++) {
 		printf("%d\n", vals.data[i]);
 	}
 
-	// free the array
+	// Free the array
 	array_free(&vals);
 }
 
